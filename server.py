@@ -1,11 +1,6 @@
 import os
-# We'll render HTML templates and access data sent by POST
-# using the request object from flask. Redirect and url_for
-# will be used to redirect the user once the upload is done
-# and send_from_directory will help us to send/show on the
-# browser the file that the user just uploaded
+
 from flask import Flask, render_template, request, redirect, url_for, send_from_directory
-from werkzeug import secure_filename
 from PIL import Image
 from io import BytesIO
 import base64
@@ -27,7 +22,7 @@ def handleImage():
     im = Image.open(BytesIO(base64.b64decode(image)))
     st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
     im.convert('RGB').save(os.path.join(app.config['UPLOAD_FOLDER'],st+".jpg"))
-    return '{"status":"OK"}'
+    return '{"status": "OK","code": 200,"message": "Data processed sucessfully","result": {"leafName": "Apple","healthState": "Unhealthy","cropDisease":"Apple Black Rot"}}'
 
 if __name__ == '__main__':
     app.run(
