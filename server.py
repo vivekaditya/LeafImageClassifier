@@ -13,16 +13,18 @@ app = Flask(__name__)
 # This is the path to the upload directory
 app.config['UPLOAD_FOLDER'] = 'uploads/'
 
-
 @app.route('/handleImage',methods=['POST'])
 def handleImage():
-    ts = time.time()
-    image = request.form['imageString']
-    print image
-    im = Image.open(BytesIO(base64.b64decode(image)))
-    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
-    im.convert('RGB').save(os.path.join(app.config['UPLOAD_FOLDER'],st+".jpg"))
-    return '{"status": "OK","code": 200,"message": "Data processed sucessfully","result": {"leafName": "Apple","healthState": "Unhealthy","cropDisease":"Apple Black Rot"}}'
+    try:
+        ts = time.time()
+        image = request.form['imageString']
+        print image
+        im = Image.open(BytesIO(base64.b64decode(image)))
+        st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d %H:%M:%S')
+        im.convert('RGB').save(os.path.join(app.config['UPLOAD_FOLDER'],st+".jpg"))
+        return '{"status": "OK","code": 200,"message": "Data processed sucessfully","result": {"leafName": "Apple","healthState": "Unhealthy","cropDisease":"Apple Black Rot"}}'
+    except:
+        return '{"status": "ERROR","code": 500,"message": "Failed to process data,Please upload a valid Image"}'
 
 if __name__ == '__main__':
     app.run(
